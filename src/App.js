@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'//imrr
+import { UserProvider } from './components/context/context'
+import NavBar from './components/navbar/NavBar'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  state = {
+    
+    login: false,
+    role:false,
+    idUser:"",
+    price:"",
+    getPrice:(data)=>{
+      this.setState({
+        price:data
+      })
+    },
+    setRole:(value)=>{
+      console.log("role ",value)
+      
+      this.setState({
+        role:value
+      })
+    },
+    setLogin: (click) => {
+      this.authtcn(click)
+    },
+    setId:(id)=>{
+      this.setState({
+        idUser:id
+      })
+    }
+   
+  }
+
+
+ 
+  authtcn = (click) => {
+    console.log(click);
+
+
+    this.setState({
+      login: click
+
+    })
+  }
+ 
+
+  render() {
+    return (
+      <Router>
+
+        <UserProvider value={this.state}>
+          <NavBar />
+
+        </UserProvider>
+
+        
+      </Router>
+    )
+  }
 }
-
-export default App;
