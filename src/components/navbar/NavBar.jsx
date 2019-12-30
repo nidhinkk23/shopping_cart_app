@@ -9,6 +9,7 @@ import Login from '../login/Login'
 import CreateAccount from '../createAccount/CreateAccount'
 import Home from '../home/Home'
 import BillingPage from '../billingPage/BillingPage'
+import Profile from '../profile/Profile'
 
 export default function NavBar() {
     const context = useContext(UserContext)
@@ -55,6 +56,9 @@ export default function NavBar() {
                             <li id="show-li" className="nav-item  ">
                                 <Link to='/wishlist' className="nav-link"><i className="fas fa-heart"></i>Wishlist</Link>
                             </li>
+                            <li id="show-li" className="nav-item  ">
+                                <Link to='/profile' className="nav-link">Profile</Link>
+                            </li>
                             <li id="create-li" className="nav-item  ">
                                 <Link onClick={() => context.setLogin(false)} to='/login' className="nav-link">Logout</Link>
 
@@ -68,8 +72,9 @@ export default function NavBar() {
                 {context.login ? <Route exact path='/showproduct' component={ShowProduct} ></Route> : <Route path='/showproduct' component={Login} ></Route>}
                 {context.login ? <Route exact path='/cart' component={CartItems} ></Route> : <Route path='/cart' component={Login} ></Route>}
                 {context.login ? <Route exact path='/wishlist' component={Wishlist} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
-
+                {context.login ? <Route path='/profile' component={Profile} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
                 {context.login ? <Route path='/billingpage' component={BillingPage} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
+
 
                 <Route path='/createaccount' component={CreateAccount} ></Route>
 

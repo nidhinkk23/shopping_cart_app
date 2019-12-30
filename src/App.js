@@ -10,6 +10,12 @@ export default class App extends Component {
     role:false,
     idUser:"",
     price:"",
+    details:"",
+    getDetails:(data)=>{
+      this.setState({
+        details:data
+      })
+    },
     getPrice:(data)=>{
       this.setState({
         price:data

@@ -11,9 +11,11 @@ export default function Login(props) {
         email: "",
         password: "",
         accounts: [],
-        
+
     }
     const [state, setState] = useState(states)
+    const [valEmail, setvalEmail] = useState({ vale: false, errore: "" })
+    const [valPass, setvalPass] = useState({ valp: false, errorp: "" })
 
 
     let handleChange = (event) => {
@@ -24,7 +26,7 @@ export default function Login(props) {
         })
 
     }
-
+    const { email, password } = state
     let getAllAccounts = async () => {
         const url = `https://react-shopping-cart-fa82c.firebaseio.com/account.json`
         let response = await Axios.get(url)
@@ -52,24 +54,116 @@ export default function Login(props) {
         })
 
     }
-    let handleSubmit = (event) => {
+    let onKeyUpValidation = (event) => {
+        if (event.target.name === "email") {
+            if (email.trim().length === 0 || password.trim().length === 0 || !(/^\w+([/.-]?\w+)@\w+([/.-]?\w+)(\.\w{2,3})+$/.test(email.trim()))) {
+
+
+                if (email.trim().length === 0) {
+                    setvalEmail({
+                        vale: true,
+                        errore: "email should not be empty"
+                    })
+                } else if (!(/^\w+([/.-]?\w+)@\w+([/.-]?\w+)(\.\w{2,3})+$/.test(email.trim()))) {
+                    setvalEmail({
+                        vale: true,
+                        errore: "email is invalid"
+                    })
+                }
+                else {
+                    setvalEmail({
+                        ...valEmail,
+                        vale: false,
+
+                    })
+                }
+            }
+        }
+
+        if (event.target.name === "password") {
+            if (password.trim().length === 0 || password.trim().match(/[a-z]/g) === null || password.trim().match(/[A-Z]/g) === null || password.trim().match(/[0-9]/g) === null || password.trim().match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) === null) {
+                setvalPass({
+                    valp: true,
+                    errorp: "value should contain one lower case upper case special char and no."
+                })
+
+            } else {
+                setvalPass({
+                    ...valPass,
+                    valp: false,
+
+                })
+            }
+
+        }
+
+    }
+    let validation = (event) => {
+
         event.preventDefault()
+
+        if (email.trim().length === 0 || password.trim().length === 0 || !(/^\w+([/.-]?\w+)@\w+([/.-]?\w+)(\.\w{2,3})+$/.test(email.trim()))) {
+
+
+            if (email.trim().length === 0) {
+                setvalEmail({
+                    vale: true,
+                    errore: "email should not be empty"
+                })
+            } else if (!(/^\w+([/.-]?\w+)@\w+([/.-]?\w+)(\.\w{2,3})+$/.test(email.trim()))) {
+                setvalEmail({
+                    vale: true,
+                    errore: "email is invalid"
+                })
+            }
+            else {
+                setvalEmail({
+                    ...valEmail,
+                    vale: false,
+
+                })
+            }
+            if (password.trim().length === 0 || password.trim().match(/[a-z]/g) === null || password.trim().match(/[A-Z]/g) === null || password.trim().match(/[0-9]/g) === null || password.trim().match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) === null) {
+                setvalPass({
+                    valp: true,
+                    errorp: "value should contain one lower case upper case special char and no."
+                })
+
+            } else {
+                setvalPass({
+                    ...valPass,
+                    valp: true,
+
+                })
+            }
+
+        } else {
+            handleSubmit()
+        }
+
+    }
+    let handleSubmit = (event) => {
+
         console.log("state.accounts ", state.accounts);
         state.accounts.map((value, index) => {
             console.log(value.email);
             console.log(value.password);
             if (value.email === state.email && value.password === state.password) {
-                console.log("success",value.id);
-                  context.setRole(value.role)
-               
+                console.log("success", value.id);
+                context.setRole(value.role)
+                context.getDetails(value)
                 context.setId(value.id)
                 props.history.push('/home')
                 context.setLogin(true)
 
 
             } else {
-                console.log("fail");
 
+                console.log("fail");
+                setvalPass({
+                    valp: true,
+                    errorp: "invalid password or username"
+                })
             }
 
 
@@ -91,30 +185,37 @@ export default function Login(props) {
 
 
     }, [])
+
+    const style = {
+        color: 'red',
+        fontSize: '15px'
+    }
     return (
         <div>
             {/* <TextField id="standard-basic" label="Standard" /> */}
             <div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={validation}>
                     <div className="form-group col-md-4 col-sm-4 mt-5 mb-5   offset-md-4">
                         <h1 className="offset-3" >Login</h1>
                         <TextField className="form-control mb-3"
                             placeholder='Email'
                             name='email'
+                            onKeyUp={onKeyUpValidation}
                             value={state.email}
                             onChange={handleChange}
                             type="text"></TextField>
-                        {/*  {this.state.showUserName ?
-                            <p style={unameStyle}>{this.state.value1}</p> : null}
- */}
+                        {valEmail.vale ?
+                            <p style={style}>{valEmail.errore}</p> : null}
+
                         <TextField className="form-control mb-3"
                             placeholder='password'
                             name='password'
+                            onKeyUp={onKeyUpValidation}
                             value={state.password}
                             onChange={handleChange}
                             type="text"></TextField>
-                        {/*   {this.state.showPassword ?
-                            <p style={unameStyle}>{this.state.value2}</p> : null} */}
+                        {valPass.valp ?
+                            <p style={style}>{valPass.errorp}</p> : null}
 
                         <div>
 
@@ -122,13 +223,15 @@ export default function Login(props) {
                                 type="submit">login</button>
 
                         </div>
+                       
+
 
                     </div>
 
 
                 </form>
             </div>
-           
+
 
         </div>
     )

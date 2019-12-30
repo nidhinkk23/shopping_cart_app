@@ -194,6 +194,7 @@ export default function ShowProduct(props) {
 
     let uploadingWishlist = async (wishlistData) => {
 
+        
         console.log("here");
 
 
@@ -208,7 +209,7 @@ export default function ShowProduct(props) {
             if (status === 200) {
 
                 console.log("Successfully Added to the wishlist");
-
+                getAllAccount()
 
             } else {
                 console.log("Failed to Add");
@@ -220,16 +221,33 @@ export default function ShowProduct(props) {
         }
 
     }
+    let getFromUpdated = async()=>{
+        
+    }
 
     let deletingWishlist = async (wishlistDa) => {
-        console.log(wishlistData);
         
-      const id = wishlistDa.id
+
+        console.log("Account to  be delete ", wishlistDa);
+        const id = wishlistDa.id
         console.log("id ", id);
-        wishlistData.accounts.map((value)=>{
-            console.log(value.id);
+
+       /*  const url = `https://react-shopping-cart-fa82c.firebaseio.com/addwishlist/${context.idUser}/` + id + `/.json`
+
+
+        try {
+            const response = await Axios.delete(url)
+            console.log("response of delete ", response);
+
             
-        })
+        } catch (error) {
+            console.log("error", error);
+
+        } */
+ 
+    }
+
+
 
 
  /* 
@@ -242,7 +260,7 @@ export default function ShowProduct(props) {
 
 
 
-    }
+   
 
 
 
