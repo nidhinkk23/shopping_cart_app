@@ -5,7 +5,6 @@ import Axios from 'axios'
 import NavBar from '../navbar/NavBar'
 
 export default function Login(props) {
-
     const context = useContext(UserContext)
     let states = {
         email: "",
@@ -144,18 +143,27 @@ export default function Login(props) {
     }
     let handleSubmit = (event) => {
 
-        console.log("state.accounts ", state.accounts);
+        // console.log("state.accounts ", state.accounts);
         state.accounts.map((value, index) => {
-            console.log(value.email);
-            console.log(value.password);
+            // console.log("value ",value);
+            
+            // console.log(value.email);
+            // console.log(value.password);
             if (value.email === state.email && value.password === state.password) {
-                console.log("success", value.id);
+                localStorage.setItem("details",JSON.stringify(value))
+                console.log("success id", value.id);
+                localStorage.setItem("id",value.id)
                 context.setRole(value.role)
+                localStorage.setItem("role",value.role)
+                
+                // localStorage.setItem("value",value)
+
                 context.getDetails(value)
                 context.setId(value.id)
+                localStorage.setItem("idUser",value.id)
                 props.history.push('/home')
                 context.setLogin(true)
-
+                localStorage.setItem("login",true)
 
             } else {
 

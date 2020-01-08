@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import AddProduct from '../addProduct/AddProduct'
 import ShowProduct from '../showProduct/ShowProduct'
@@ -10,11 +10,16 @@ import CreateAccount from '../createAccount/CreateAccount'
 import Home from '../home/Home'
 import BillingPage from '../billingPage/BillingPage'
 import Profile from '../profile/Profile'
+import MyOrder from '../myorder/MyOrder'
 
 export default function NavBar() {
     const context = useContext(UserContext)
     console.log("role in navbar ", context.role);
-
+    console.log(localStorage.getItem("login"));
+    let isLogin = localStorage.getItem("login")
+    let role = localStorage.getItem("role")
+    console.log("role ",role);
+    
     return (
         <>
             <div className='App'>
@@ -26,7 +31,7 @@ export default function NavBar() {
 
                     <div className="collapse navbar-collapse" id="collapsibleNavId">
                     </div>
-                    {!context.login ?
+                    {isLogin==='false' ?
 
                         <ul className="navbar-nav offset-6 mt-lg-0">
 
@@ -44,7 +49,7 @@ export default function NavBar() {
                                 <Link to='/home' className="nav-link">Home</Link>
                             </li>
 
-                            {context.role === "Admin" ? <li id="create-li" className="nav-item  ">
+                            {role === "Admin" ? <li id="create-li" className="nav-item  ">
                                 <Link to='/addproduct' className="nav-link"><i className="fas fa-plus-circle"></i>AddProduct</Link>
                             </li> : null}
                             <li id="show-li" className="nav-item  ">
@@ -59,21 +64,27 @@ export default function NavBar() {
                             <li id="show-li" className="nav-item  ">
                                 <Link to='/profile' className="nav-link">Profile</Link>
                             </li>
+                            <li id="show-li" className="nav-item  ">
+                                <Link to='/myorder' className="nav-link">MyOrder</Link>
+                            </li>
                             <li id="create-li" className="nav-item  ">
-                                <Link onClick={() => context.setLogin(false)} to='/login' className="nav-link">Logout</Link>
+                                <Link onClick={()=>{
+                                    context.setLogin(false)
+                                }} to='/login' className="nav-link">Logout</Link>
 
                             </li>
                         </ul>
                     }
                 </nav>
-                {context.login ? <Route exact path='/home' component={Home} /> : <Route path='/home' component={Login} ></Route>}
+                {isLogin==="true" ? <Route exact path='/home' component={Home} /> : <Route path='/home' component={Login} ></Route>}
 
-                {context.login ? <Route exact path='/addproduct' component={AddProduct} /> : <Route path='/addproduct' component={Login} ></Route>}
-                {context.login ? <Route exact path='/showproduct' component={ShowProduct} ></Route> : <Route path='/showproduct' component={Login} ></Route>}
-                {context.login ? <Route exact path='/cart' component={CartItems} ></Route> : <Route path='/cart' component={Login} ></Route>}
-                {context.login ? <Route exact path='/wishlist' component={Wishlist} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
-                {context.login ? <Route path='/profile' component={Profile} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
-                {context.login ? <Route path='/billingpage' component={BillingPage} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
+                {isLogin==="true" ? <Route exact path='/addproduct' component={AddProduct} /> : <Route path='/addproduct' component={Login} ></Route>}
+                {isLogin==="true" ? <Route exact path='/showproduct' component={ShowProduct} ></Route> : <Route path='/showproduct' component={Login} ></Route>}
+                {isLogin==="true" ? <Route exact path='/cart' component={CartItems} ></Route> : <Route path='/cart' component={Login} ></Route>}
+                {isLogin==="true" ? <Route exact path='/wishlist' component={Wishlist} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
+                {isLogin==="true" ? <Route path='/profile' component={Profile} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
+                {isLogin==="true" ? <Route path='/billingpage' component={BillingPage} ></Route> : <Route path='/wishlist' component={Login} ></Route>}
+                {isLogin==="true" ? <Route path='/myorder' component={MyOrder} ></Route> : <Route path='/myorder' component={Login} ></Route>}
 
 
                 <Route path='/createaccount' component={CreateAccount} ></Route>

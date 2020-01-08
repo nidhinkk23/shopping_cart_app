@@ -44,7 +44,7 @@ export default class App extends Component {
   authtcn = (click) => {
     console.log(click);
 
-
+    localStorage.setItem("login",click)
     this.setState({
       login: click
 

@@ -8,6 +8,7 @@ import BillingPage from '../billingPage/BillingPage'
 
 
 export default function CartItems(props) {
+    let idUser = localStorage.getItem("idUser")
 
     let stateShow = {
         accounts: [],
@@ -20,7 +21,7 @@ export default function CartItems(props) {
     console.log("props in Cart items ", props)
     //call in the useEffect method
     let getAllAccount = () => {
-        const url = `https://react-shopping-cart-fa82c.firebaseio.com/addcart/${context.idUser}.json`
+        const url = `https://react-shopping-cart-fa82c.firebaseio.com/addcart/${idUser}.json`
 
         let axiosGetProduct = async () => {
             try {
@@ -39,8 +40,26 @@ export default function CartItems(props) {
                 }
                 console.log("arr ", arr);
 
+                function getUnique(arr, comp) {
+
+                    const unique = arr
+                        .map(e => e[comp])
+
+                        // store the keys of the unique objects
+                        .map((e, i, final) => final.indexOf(e) === i && i)
+
+                        // eliminate the dead keys & store unique objects
+                        .filter(e => arr[e]).map(e => arr[e]);
+
+                    return unique;
+                }
+                let arrF = getUnique(arr, 'productName')
+                // console.log("******", arrF);
+
+                updateAfterF(arrF)
+
                 setState({
-                    accounts: arr
+                    accounts: arrF
                 })
 
 
@@ -54,13 +73,60 @@ export default function CartItems(props) {
         axiosGetProduct()
     }
 
-
     //call after mounted(comp. did mount)
     useEffect(() => {
         getAllAccount()
         console.log(state.accounts);
 
+
     }, [])
+
+    let updateAfterF = (arrF) => {
+        console.log("********", arrF);
+        deleteData()
+        uploadFilteredData(arrF)
+
+
+
+    }
+    let deleteData = async () => {
+
+        try {
+
+            const url = `https://react-shopping-cart-fa82c.firebaseio.com/addcart/${context.idUser}/.json`
+            let response = await Axios.delete(url)
+            console.log("response ", response);
+
+
+        } catch (error) {
+
+            console.log();
+
+        }
+
+    }
+    
+    let uploadFilteredData = (arrF) => {
+
+        try {
+
+            arrF.map((value)=>{
+
+            const url = `https://react-shopping-cart-fa82c.firebaseio.com/addcart/${idUser}.json`
+
+            let response = Axios.post(url,value)
+            console.log(response);
+            
+           })
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+
+    }
 
     let deleteCart = async (accToDelete) => {
 
@@ -102,7 +168,7 @@ export default function CartItems(props) {
         height: '150px'
     }
 
-   
+
 
     return (
         <div className=''>
@@ -134,7 +200,7 @@ export default function CartItems(props) {
                     <div className='bg-light '>
 
                         <div className='offset-3 mt-5  '>
-                            <PriceCalculation  data={state.accounts} />
+                            <PriceCalculation data={state.accounts} />
                             <button onClick={billingfn} className="btn mb-5 offset-md-2 offset-sm-1 btn-primary">PlaceOrder</button>
 
                         </div>
@@ -144,9 +210,9 @@ export default function CartItems(props) {
                     </div>
 
                 </div>
-             
 
-              
+
+
 
             </div>
 
